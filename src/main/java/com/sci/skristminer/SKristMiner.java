@@ -2,6 +2,7 @@ package com.sci.skristminer;
 
 import org.apache.commons.cli.*;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,10 +118,10 @@ public final class SKristMiner implements MinerListener, Runnable
                         System.out.println(
                                 this.balance + " KST  " +
                                 this.blocksMined + " Blocks Mined  " +
-                                this.block + "  " + lastMiner.getNonce() +
-                                "  " + Utils.formatSpeed(rawSpeed) +
-                                " (" + Utils.formatSpeed(this.highestSpeed) + ", " +
-                                Utils.formatSpeed(this.totalSpeed / this.secondsElapsed)
+                                this.block + "  " + NumberFormat.getInstance().format(lastMiner.getNonce()) +
+                                "  (" + Utils.formatSpeed(rawSpeed) + " now, " +
+                                Utils.formatSpeed(this.highestSpeed) + " high, " +
+                                Utils.formatSpeed(this.totalSpeed / this.secondsElapsed) + " avg)"
                         );
                         //@formatter:on
                     }
