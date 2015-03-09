@@ -122,8 +122,6 @@ public final class SKristMiner implements MinerListener, Runnable
                         if (rawSpeed > this.highestSpeed)
                             this.highestSpeed = rawSpeed;
 
-                        final Miner lastMiner = this.miners.get(this.miners.size() - 1);
-
                         final Date date = new Date();
                         //@formatter:off
                         System.out.println(
