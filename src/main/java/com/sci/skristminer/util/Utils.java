@@ -150,9 +150,13 @@ public final class Utils
         }
     }
 
-    public static void submitSolution(final String minerID, final long nonce)
+    public static boolean submitSolution(final String minerID, final long nonce)
     {
-        get(KRIST_SYNC_LINK + "submitblock&address=" + minerID + "&nonce=" + nonce);
+        final List<String> response = get(KRIST_SYNC_LINK + "submitblock&address=" + minerID + "&nonce=" + nonce);
+        String all = "";
+        for (final String line : response)
+            all += line;
+        return all.contains("Block solved");
     }
 
     public static boolean isMinerValid(final String minerID)
