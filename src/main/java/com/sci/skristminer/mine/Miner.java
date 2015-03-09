@@ -1,4 +1,7 @@
-package com.sci.skristminer;
+package com.sci.skristminer.mine;
+
+import com.sci.skristminer.SKristMiner;
+import com.sci.skristminer.util.Utils;
 
 /**
  * @author sci4me

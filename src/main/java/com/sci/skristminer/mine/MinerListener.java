@@ -1,4 +1,4 @@
-package com.sci.skristminer;
+package com.sci.skristminer.mine;
 
 /**
  * @author sci4me

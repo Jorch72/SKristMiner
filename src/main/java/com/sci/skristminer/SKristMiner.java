@@ -1,5 +1,8 @@
 package com.sci.skristminer;
 
+import com.sci.skristminer.mine.Miner;
+import com.sci.skristminer.mine.MinerListener;
+import com.sci.skristminer.util.Utils;
 import org.apache.commons.cli.*;
 
 import java.text.NumberFormat;
