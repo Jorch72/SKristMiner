@@ -32,7 +32,7 @@ public final class SHA256
         int h6 = 0x1f83d9ab;
         int h7 = 0x5be0cd19;
 
-        final int pl64 = padded.length / 64;
+        final int pl64 = padded.length >> 6;
         int i, j, sa, sb, j4;
         int a, b, c, d, e, f, g, h, s0, s1, maj, t1, t2, ch;
         int[] words = new int[64];
@@ -51,7 +51,7 @@ public final class SHA256
             System.arraycopy(padded, 64 * i, block, 0, 64);
             for (j = 0; j < 16; j++)
             {
-                j4 = j * 4;
+                j4 = j << 2;
                 words[j] |= ((block[j4] & 0x000000FF) << 24);
                 words[j] |= ((block[j4 + 1] & 0x000000FF) << 16);
                 words[j] |= ((block[j4 + 2] & 0x000000FF) << 8);
@@ -142,7 +142,7 @@ public final class SHA256
     private static byte[] padMessage(final byte[] data)
     {
         final int origLength = data.length;
-        final int tailLength = origLength % 64;
+        final int tailLength = origLength & 63;
         final int padLength;
         if ((64 - tailLength >= 9))
             padLength = 64 - tailLength;
@@ -152,7 +152,7 @@ public final class SHA256
         final byte[] thePad = new byte[padLength];
         thePad[0] = (byte) 0x80;
 
-        final long lengthInBits = origLength * 8;
+        final long lengthInBits = origLength << 3;
 
         final int lm1 = thePad.length - 1;
         thePad[lm1] = (byte) (lengthInBits & 0xFF);

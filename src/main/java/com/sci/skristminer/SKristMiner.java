@@ -2,11 +2,13 @@ package com.sci.skristminer;
 
 import com.sci.skristminer.mine.Miner;
 import com.sci.skristminer.mine.MinerListener;
+import com.sci.skristminer.util.SHA256;
 import com.sci.skristminer.util.Utils;
 import org.apache.commons.cli.*;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
