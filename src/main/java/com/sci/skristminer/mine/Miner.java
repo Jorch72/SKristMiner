@@ -43,7 +43,7 @@ public final class Miner implements Runnable
         final String minerBlock = this.minerID + this.block;
         final long lWork = Long.parseLong(this.work);
         String newBlock = Utils.subSHA256(minerBlock + this.nonce, 12);
-        long lNewBlock = Utils.parseHex(newBlock);
+        long lNewBlock = Long.parseLong(newBlock, 16);
 
         for (int hash = 0; hash < this.nonces && lNewBlock >= lWork; hash++, this.nonce++)
         {
@@ -51,7 +51,7 @@ public final class Miner implements Runnable
                 return;
 
             newBlock = Utils.subSHA256(minerBlock + this.nonce, 12);
-            lNewBlock = Utils.parseHex(newBlock);
+            lNewBlock = Long.parseLong(newBlock, 16);
         }
 
         if (lNewBlock < lWork)
