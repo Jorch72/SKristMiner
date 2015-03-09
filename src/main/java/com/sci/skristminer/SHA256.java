@@ -1,4 +1,4 @@
-package com.sci.skristminer;
+package com.sci.skristminer.util;
 
 /**
  * @author sci4me
@@ -23,33 +23,51 @@ public final class SHA256
     {
         byte[] hashed = new byte[32], block = new byte[64], padded = padMessage(message);
 
-        int[] H = {0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19};
+        int h0 = 0x6a09e667;
+        int h1 = 0xbb67ae85;
+        int h2 = 0x3c6ef372;
+        int h3 = 0xa54ff53a;
+        int h4 = 0x510e527f;
+        int h5 = 0x9b05688c;
+        int h6 = 0x1f83d9ab;
+        int h7 = 0x5be0cd19;
 
-        for (int i = 0; i < padded.length / 64; i++)
+        final int pl64 = padded.length / 64;
+        int i, j, sa, sb, j4;
+        int a, b, c, d, e, f, g, h, s0, s1, maj, t1, t2, ch;
+        int[] words = new int[64];
+
+        for (i = 0; i < pl64; i++)
         {
-            int[] words = new int[64];
-            int a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7], s0, s1, maj, t1, t2, ch;
+            a = h0;
+            b = h1;
+            c = h2;
+            d = h3;
+            e = h4;
+            f = h5;
+            g = h6;
+            h = h7;
 
             System.arraycopy(padded, 64 * i, block, 0, 64);
-            for (int j = 0; j < 16; j++)
+            for (j = 0; j < 16; j++)
             {
-                final int j4 = j * 4;
+                j4 = j * 4;
                 words[j] |= ((block[j4] & 0x000000FF) << 24);
                 words[j] |= ((block[j4 + 1] & 0x000000FF) << 16);
                 words[j] |= ((block[j4 + 2] & 0x000000FF) << 8);
                 words[j] |= (block[j4 + 3] & 0x000000FF);
             }
 
-            for (int j = 16; j < 64; j++)
+            for (j = 16; j < 64; j++)
             {
-                final int sa = words[j - 15];
-                final int sb = words[j - 2];
+                sa = words[j - 15];
+                sb = words[j - 2];
                 s0 = Integer.rotateRight(sa, 7) ^ Integer.rotateRight(sa, 18) ^ (sa >>> 3);
                 s1 = Integer.rotateRight(sb, 17) ^ Integer.rotateRight(sb, 19) ^ (sb >>> 10);
                 words[j] = words[j - 16] + s0 + words[j - 7] + s1;
             }
 
-            for (int j = 0; j < 64; j++)
+            for (j = 0; j < 64; j++)
             {
                 s0 = Integer.rotateRight(a, 2) ^ Integer.rotateRight(a, 13) ^ Integer.rotateRight(a, 22);
                 maj = (a & b) ^ (a & c) ^ (b & c);
@@ -68,25 +86,55 @@ public final class SHA256
                 a = t1 + t2;
             }
 
-            H[0] += a;
-            H[1] += b;
-            H[2] += c;
-            H[3] += d;
-            H[4] += e;
-            H[5] += f;
-            H[6] += g;
-            H[7] += h;
+            h0 += a;
+            h1 += b;
+            h2 += c;
+            h3 += d;
+            h4 += e;
+            h5 += f;
+            h6 += g;
+            h7 += h;
         }
 
-        for (int i = 0; i < 8; i++)
-        {
-            final int h = H[i];
-            final int i4 = i * 4;
-            hashed[i4] = (byte) ((h >>> 56) & 0xff);
-            hashed[i4 + 1] = (byte) ((h >>> 48) & 0xff);
-            hashed[i4 + 2] = (byte) ((h >>> 40) & 0xff);
-            hashed[i4 + 3] = (byte) ((h >>> 32) & 0xff);
-        }
+        hashed[0] = (byte) ((h0 >>> 56) & 0xff);
+        hashed[1] = (byte) ((h0 >>> 48) & 0xff);
+        hashed[2] = (byte) ((h0 >>> 40) & 0xff);
+        hashed[3] = (byte) ((h0 >>> 32) & 0xff);
+
+        hashed[4] = (byte) ((h1 >>> 56) & 0xff);
+        hashed[5] = (byte) ((h1 >>> 48) & 0xff);
+        hashed[6] = (byte) ((h1 >>> 40) & 0xff);
+        hashed[7] = (byte) ((h1 >>> 32) & 0xff);
+
+        hashed[8] = (byte) ((h2 >>> 56) & 0xff);
+        hashed[9] = (byte) ((h2 >>> 48) & 0xff);
+        hashed[10] = (byte) ((h2 >>> 40) & 0xff);
+        hashed[11] = (byte) ((h2 >>> 32) & 0xff);
+
+        hashed[12] = (byte) ((h3 >>> 56) & 0xff);
+        hashed[13] = (byte) ((h3 >>> 48) & 0xff);
+        hashed[14] = (byte) ((h3 >>> 40) & 0xff);
+        hashed[15] = (byte) ((h3 >>> 32) & 0xff);
+
+        hashed[16] = (byte) ((h4 >>> 56) & 0xff);
+        hashed[17] = (byte) ((h4 >>> 48) & 0xff);
+        hashed[18] = (byte) ((h4 >>> 40) & 0xff);
+        hashed[19] = (byte) ((h4 >>> 32) & 0xff);
+
+        hashed[20] = (byte) ((h5 >>> 56) & 0xff);
+        hashed[21] = (byte) ((h5 >>> 48) & 0xff);
+        hashed[22] = (byte) ((h5 >>> 40) & 0xff);
+        hashed[23] = (byte) ((h5 >>> 32) & 0xff);
+
+        hashed[24] = (byte) ((h6 >>> 56) & 0xff);
+        hashed[25] = (byte) ((h6 >>> 48) & 0xff);
+        hashed[26] = (byte) ((h6 >>> 40) & 0xff);
+        hashed[27] = (byte) ((h6 >>> 32) & 0xff);
+
+        hashed[28] = (byte) ((h7 >>> 56) & 0xff);
+        hashed[29] = (byte) ((h7 >>> 48) & 0xff);
+        hashed[30] = (byte) ((h7 >>> 40) & 0xff);
+        hashed[31] = (byte) ((h7 >>> 32) & 0xff);
 
         return hashed;
     }

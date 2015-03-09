@@ -9,6 +9,7 @@ public final class Miner implements Runnable
     private final int id;
 
     private final String block;
+    private final String work;
     private final String minerID;
     private final long startNonce;
     private final int nonces;
@@ -19,11 +20,12 @@ public final class Miner implements Runnable
 
     private volatile boolean stop;
 
-    public Miner(final MinerListener listener, final int id, final String block, final String minerID, final long startNonce)
+    public Miner(final MinerListener listener, final int id, final String block, final String work, final String minerID, final long startNonce)
     {
         this.listener = listener;
         this.id = id;
         this.block = block;
+        this.work = work;
         this.minerID = minerID;
         this.startNonce = startNonce;
         this.nonce = this.startNonce;
@@ -36,17 +38,20 @@ public final class Miner implements Runnable
     public void run()
     {
         final String minerBlock = this.minerID + this.block;
+        final long lWork = Long.parseLong(this.work);
         String newBlock = Utils.subSHA256(minerBlock + this.nonce, 12);
+        long lNewBlock = Long.parseLong(newBlock, 16);
 
-        for (int hash = 0; hash < this.nonces && newBlock.compareTo(this.block) >= 0; hash++, this.nonce++)
+        for (int hash = 0; hash < this.nonces && lNewBlock >= lWork; hash++, this.nonce++)
         {
             if (this.stop)
                 return;
 
             newBlock = Utils.subSHA256(minerBlock + this.nonce, 12);
+            lNewBlock = Long.parseLong(newBlock, 16);
         }
 
-        if (newBlock.compareTo(this.block) < 0)
+        if (lNewBlock < lWork)
         {
             Utils.submitSolution(this.minerID, this.nonce - 1);
             this.solvedBlock = true;

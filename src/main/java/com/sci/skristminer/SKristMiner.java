@@ -51,6 +51,7 @@ public final class SKristMiner implements MinerListener, Runnable
 
     private long secondsElapsed;
     private String block;
+    private String work;
     private int finishedMiners;
     private int blocksMined;
     private volatile boolean isMining;
@@ -76,7 +77,8 @@ public final class SKristMiner implements MinerListener, Runnable
         this.nonces = nonces;
 
         this.block = Utils.getLastBlock();
-        System.out.println("Mining on address " + address + " with " + threads + " thread" + (threads > 1 ? "s" : "") + " (" + this.block + ")");
+        this.work = Utils.getWork();
+        System.out.println("Mining on address " + address + " with " + threads + " thread" + (threads > 1 ? "s" : "") + " (" + this.block + " " + this.work + ")");
 
         this.startMining(0);
         final Thread main = new Thread(this);
@@ -118,7 +120,7 @@ public final class SKristMiner implements MinerListener, Runnable
                         System.out.println(
                                 this.balance + " KST  " +
                                 this.blocksMined + " Blocks Mined  " +
-                                this.block + "  " + NumberFormat.getInstance().format(lastMiner.getNonce()) +
+                                this.block + "  " + this.work + "  " + NumberFormat.getInstance().format(lastMiner.getNonce()) +
                                 "  (" + Utils.formatSpeed(rawSpeed) + " now, " +
                                 Utils.formatSpeed(this.highestSpeed) + " high, " +
                                 Utils.formatSpeed(this.totalSpeed / this.secondsElapsed) + " avg)"
@@ -151,13 +153,14 @@ public final class SKristMiner implements MinerListener, Runnable
             if (this.block == null || !this.block.equals(Utils.getLastBlock()))
             {
                 this.block = Utils.getLastBlock();
+                this.work = Utils.getWork();
                 startingNonce = 0;
-                System.out.println("New block: " + this.block);
+                System.out.println("New block: " + this.block + "  work: " + this.work);
             }
 
             for (int miner = 0; miner < this.threads; miner++)
             {
-                final Miner miner_ = new Miner(this, miner, this.block, this.address, startingNonce + this.nonces * miner);
+                final Miner miner_ = new Miner(this, miner, this.block, this.work, this.address, startingNonce + this.nonces * miner);
                 this.miners.add(miner_);
                 final Thread minerThread = new Thread(miner_);
                 minerThread.setPriority(Thread.MAX_PRIORITY);

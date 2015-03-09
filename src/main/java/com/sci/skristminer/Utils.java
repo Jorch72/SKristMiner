@@ -15,6 +15,7 @@ public final class Utils
 {
     public static final String KRIST_SYNC_LINK = get("https://raw.githubusercontent.com/BTCTaras/kristwallet/master/staticapi/syncNode").get(0) + "?";
     public static final String LAST_BLOCK_LINK = KRIST_SYNC_LINK + "lastblock";
+    public static final String GET_WORK_LINK = KRIST_SYNC_LINK + "getwork";
     public static final String BALANCE_LINK_BASE = KRIST_SYNC_LINK + "getbalance=";
     private static final DecimalFormat format = new DecimalFormat("0.00");
 
@@ -71,6 +72,12 @@ public final class Utils
     public static String subSHA256(final String data, final int endIndex)
     {
         return bytesToHex(SHA256.digest(strToBytes(data))).substring(0, endIndex);
+    }
+
+    public static String getWork()
+    {
+        final List<String> lastBlockPageData = get(GET_WORK_LINK);
+        return lastBlockPageData == null ? null : lastBlockPageData.get(0);
     }
 
     public static String getLastBlock()
