@@ -21,7 +21,13 @@ public final class SHA256
 
     public static byte[] digest(final byte[] message)
     {
-        byte[] hashed = new byte[32], block = new byte[64], padded = padMessage(message);
+        final byte[] padded = padMessage(message);
+        final int pl64 = padded.length >> 6;
+
+        int[] words = new int[64];
+
+        int i, j, sa, sb, j4;
+        int a, b, c, d, e, f, g, h, s0, s1, maj, t1, t2, ch, i64;
 
         int h0 = 0x6a09e667;
         int h1 = 0xbb67ae85;
@@ -31,11 +37,6 @@ public final class SHA256
         int h5 = 0x9b05688c;
         int h6 = 0x1f83d9ab;
         int h7 = 0x5be0cd19;
-
-        final int pl64 = padded.length >> 6;
-        int i, j, sa, sb, j4;
-        int a, b, c, d, e, f, g, h, s0, s1, maj, t1, t2, ch;
-        int[] words = new int[64];
 
         for (i = 0; i < pl64; i++)
         {
@@ -47,15 +48,15 @@ public final class SHA256
             f = h5;
             g = h6;
             h = h7;
+            i64 = i << 6;
 
-            System.arraycopy(padded, 64 * i, block, 0, 64);
             for (j = 0; j < 16; j++)
             {
-                j4 = j << 2;
-                words[j] |= ((block[j4] & 0x000000FF) << 24);
-                words[j] |= ((block[j4 + 1] & 0x000000FF) << 16);
-                words[j] |= ((block[j4 + 2] & 0x000000FF) << 8);
-                words[j] |= (block[j4 + 3] & 0x000000FF);
+                j4 = (j << 2) + i64;
+                words[j] |= ((padded[j4] & 0x000000FF) << 24);
+                words[j] |= ((padded[j4 + 1] & 0x000000FF) << 16);
+                words[j] |= ((padded[j4 + 2] & 0x000000FF) << 8);
+                words[j] |= (padded[j4 + 3] & 0x000000FF);
             }
 
             for (j = 16; j < 64; j++)
@@ -95,6 +96,8 @@ public final class SHA256
             h6 += g;
             h7 += h;
         }
+
+        final byte[] hashed = new byte[32];
 
         hashed[0] = (byte) ((h0 >>> 56) & 0xff);
         hashed[1] = (byte) ((h0 >>> 48) & 0xff);
@@ -143,31 +146,27 @@ public final class SHA256
     {
         final int origLength = data.length;
         final int tailLength = origLength & 63;
+        final long lengthInBits = origLength << 3;
+
         final int padLength;
-        if ((64 - tailLength >= 9))
+        if ((64 - tailLength) >= 9)
             padLength = 64 - tailLength;
         else
             padLength = 128 - tailLength;
 
-        final byte[] thePad = new byte[padLength];
-        thePad[0] = (byte) 0x80;
-
-        final long lengthInBits = origLength << 3;
-
-        final int lm1 = thePad.length - 1;
-        thePad[lm1] = (byte) (lengthInBits & 0xFF);
-        thePad[lm1 - 1] = (byte) ((lengthInBits >>> 8) & 0xFF);
-        thePad[lm1 - 2] = (byte) ((lengthInBits >>> 16) & 0xFF);
-        thePad[lm1 - 3] = (byte) ((lengthInBits >>> 24) & 0xFF);
-        thePad[lm1 - 4] = (byte) ((lengthInBits >>> 32) & 0xFF);
-        thePad[lm1 - 5] = (byte) ((lengthInBits >>> 40) & 0xFF);
-        thePad[lm1 - 6] = (byte) ((lengthInBits >>> 48) & 0xFF);
-        thePad[lm1 - 7] = (byte) ((lengthInBits >>> 56) & 0xFF);
-
         final byte[] output = new byte[origLength + padLength];
 
         System.arraycopy(data, 0, output, 0, origLength);
-        System.arraycopy(thePad, 0, output, origLength, thePad.length);
+
+        final int lm1 = output.length - 1;
+        output[lm1] = (byte) (lengthInBits & 0xFF);
+        output[lm1 - 1] = (byte) ((lengthInBits >>> 8) & 0xFF);
+        output[lm1 - 2] = (byte) ((lengthInBits >>> 16) & 0xFF);
+        output[lm1 - 3] = (byte) ((lengthInBits >>> 24) & 0xFF);
+        output[lm1 - 4] = (byte) ((lengthInBits >>> 32) & 0xFF);
+        output[lm1 - 5] = (byte) ((lengthInBits >>> 40) & 0xFF);
+        output[lm1 - 6] = (byte) ((lengthInBits >>> 48) & 0xFF);
+        output[lm1 - 7] = (byte) ((lengthInBits >>> 56) & 0xFF);
 
         return output;
     }
