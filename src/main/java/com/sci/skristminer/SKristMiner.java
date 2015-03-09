@@ -5,8 +5,11 @@ import com.sci.skristminer.mine.MinerListener;
 import com.sci.skristminer.util.Utils;
 import org.apache.commons.cli.*;
 
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,6 +48,8 @@ public final class SKristMiner implements MinerListener, Runnable
             SKristMiner.instance = new SKristMiner();
         return SKristMiner.instance;
     }
+
+    private final DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     private String address;
     private int threads;
@@ -119,8 +124,10 @@ public final class SKristMiner implements MinerListener, Runnable
 
                         final Miner lastMiner = this.miners.get(this.miners.size() - 1);
 
+                        final Date date = new Date();
                         //@formatter:off
                         System.out.println(
+                                this.dateFormat.format(date) + ":  " +
                                 this.balance + " KST  " +
                                 this.blocksMined + " Blocks Mined  " +
                                 "(" + Utils.formatSpeed(rawSpeed) + " now, " +
