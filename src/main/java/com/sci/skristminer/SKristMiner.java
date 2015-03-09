@@ -2,15 +2,12 @@ package com.sci.skristminer;
 
 import com.sci.skristminer.mine.Miner;
 import com.sci.skristminer.mine.MinerListener;
-import com.sci.skristminer.util.SHA256;
 import com.sci.skristminer.util.Utils;
 import org.apache.commons.cli.*;
 
 import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -124,8 +121,8 @@ public final class SKristMiner implements MinerListener, Runnable
                         if (rawSpeed > this.highestSpeed)
                             this.highestSpeed = rawSpeed;
 
-                        final Date date = new Date();
                         //@formatter:off
+                        final Date date = new Date();
                         System.out.println(
                                 this.dateFormat.format(date) + ":  " +
                                 this.balance + " KST  " +
@@ -164,7 +161,7 @@ public final class SKristMiner implements MinerListener, Runnable
                 this.block = Utils.getLastBlock();
                 this.work = Utils.getWork();
                 startingNonce = 0;
-                System.out.println("New block (" + this.block + " " + this.work + ")");
+                System.out.println("New block: " + this.block + "  work: " + this.work);
             }
 
             for (int miner = 0; miner < this.threads; miner++)

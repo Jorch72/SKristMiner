@@ -55,7 +55,11 @@ public final class Miner implements Runnable
         }
 
         if (lNewBlock < lWork)
+        {
             this.solvedBlock = Utils.submitSolution(this.minerID, this.nonce - 1);
+            System.out.println("Submitted solution. Server response: " + this.solvedBlock);
+        }
+
         this.isComplete = true;
 
         this.listener.onFinish(this);

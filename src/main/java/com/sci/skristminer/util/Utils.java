@@ -102,11 +102,11 @@ public final class Utils
 
     public static boolean submitSolution(final String minerID, final long nonce)
     {
-        final List<String> response = get(KRIST_SYNC_LINK + "submitblock&address=" + minerID + "&nonce=" + nonce);
+        final List<String> result = get(KRIST_SYNC_LINK + "submitblock&address=" + minerID + "&nonce=" + nonce);
         String all = "";
-        for (final String line : response)
+        for(final String line : result)
             all += line;
-        return all.contains("Block solved");
+        return all.contains("solved");
     }
 
     public static boolean isMinerValid(final String minerID)
