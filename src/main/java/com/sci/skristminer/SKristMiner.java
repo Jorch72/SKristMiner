@@ -55,6 +55,7 @@ public final class SKristMiner implements MinerListener, Runnable
     private int nonces;
     private long highestSpeed;
     private long totalSpeed;
+    private int blockCheckTimer;
 
     private long secondsElapsed;
     private String block;
@@ -109,6 +110,20 @@ public final class SKristMiner implements MinerListener, Runnable
 
                     if (this.miners.size() == this.threads)
                     {
+                        this.blockCheckTimer++;
+                        if (this.blockCheckTimer == 5)
+                        {
+                            this.blockCheckTimer = 0;
+
+                            if (!this.block.equals(Utils.getLastBlock()) || !this.work.equals(Utils.getWork()))
+                            {
+                                this.updateBalance();
+                                this.stopMining();
+                                this.startMining(0);
+                                continue;
+                            }
+                        }
+
                         long rawSpeed = 0;
                         for (final Miner miner : this.miners)
                         {
@@ -128,7 +143,7 @@ public final class SKristMiner implements MinerListener, Runnable
                                 this.balance + " KST  " +
                                 this.blocksMined + " Blocks Mined  " +
                                 "(" + Utils.formatSpeed(rawSpeed) + " now, " +
-                                Utils.formatSpeed(this.totalSpeed / this.secondsElapsed) + " avg, " +
+                                Utils.formatSpeed(this.totalSpeed / (this.secondsElapsed == 0 ? 1 : this.secondsElapsed)) + " avg, " +
                                 Utils.formatSpeed(this.highestSpeed) + " high)"
                         );
                         //@formatter:on
