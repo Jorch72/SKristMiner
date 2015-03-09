@@ -46,6 +46,56 @@ public final class Utils
         return result;
     }
 
+    public static long parseHex(final String s) throws NumberFormatException
+    {
+        if (s == null)
+            throw new NumberFormatException("null");
+
+        long result = 0;
+        boolean negative = false;
+        int i = 0, len = s.length();
+        long limit = -Long.MAX_VALUE;
+        long multmin;
+        int digit;
+
+        if (len > 0)
+        {
+            char firstChar = s.charAt(0);
+            if (firstChar < '0')
+            {
+                if (firstChar == '-')
+                {
+                    negative = true;
+                    limit = Long.MIN_VALUE;
+                }
+                else if (firstChar != '+')
+                    throw new NumberFormatException("For input string: \"" + s + "\"");
+
+                if (len == 1)
+                    throw new NumberFormatException("For input string: \"" + s + "\"");
+                i++;
+            }
+            multmin = limit / 16;
+            while (i < len)
+            {
+                digit = Character.digit(s.charAt(i++), 16);
+                if (digit < 0)
+                    throw new NumberFormatException("For input string: \"" + s + "\"");
+                if (result < multmin)
+                    throw new NumberFormatException("For input string: \"" + s + "\"");
+                result *= 16;
+                if (result < limit + digit)
+                    throw new NumberFormatException("For input string: \"" + s + "\"");
+                result -= digit;
+            }
+        }
+        else
+        {
+            throw new NumberFormatException("For input string: \"" + s + "\"");
+        }
+        return negative ? result : -result;
+    }
+
     private static final char[] hexArray = "0123456789abcdef".toCharArray();
 
     public static String bytesToHex(final byte[] bytes)
