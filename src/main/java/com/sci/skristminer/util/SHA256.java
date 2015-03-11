@@ -143,31 +143,27 @@ public final class SHA256
     {
         final int origLength = data.length;
         final int tailLength = origLength % 64;
+
         final int padLength;
         if ((64 - tailLength >= 9))
             padLength = 64 - tailLength;
         else
             padLength = 128 - tailLength;
 
-        final byte[] thePad = new byte[padLength];
-        thePad[0] = (byte) 0x80;
-
-        final long lengthInBits = origLength * 8;
-
-        final int lm1 = thePad.length - 1;
-        thePad[lm1] = (byte) (lengthInBits & 0xFF);
-        thePad[lm1 - 1] = (byte) ((lengthInBits >>> 8) & 0xFF);
-        thePad[lm1 - 2] = (byte) ((lengthInBits >>> 16) & 0xFF);
-        thePad[lm1 - 3] = (byte) ((lengthInBits >>> 24) & 0xFF);
-        thePad[lm1 - 4] = (byte) ((lengthInBits >>> 32) & 0xFF);
-        thePad[lm1 - 5] = (byte) ((lengthInBits >>> 40) & 0xFF);
-        thePad[lm1 - 6] = (byte) ((lengthInBits >>> 48) & 0xFF);
-        thePad[lm1 - 7] = (byte) ((lengthInBits >>> 56) & 0xFF);
-
         final byte[] output = new byte[origLength + padLength];
 
+        final long lengthInBits = origLength * 8;
+        final int lm1 = output.length - 1;
+        output[lm1] = (byte) (lengthInBits & 0xFF);
+        output[lm1 - 1] = (byte) ((lengthInBits >>> 8) & 0xFF);
+        output[lm1 - 2] = (byte) ((lengthInBits >>> 16) & 0xFF);
+        output[lm1 - 3] = (byte) ((lengthInBits >>> 24) & 0xFF);
+        output[lm1 - 4] = (byte) ((lengthInBits >>> 32) & 0xFF);
+        output[lm1 - 5] = (byte) ((lengthInBits >>> 40) & 0xFF);
+        output[lm1 - 6] = (byte) ((lengthInBits >>> 48) & 0xFF);
+        output[lm1 - 7] = (byte) ((lengthInBits >>> 56) & 0xFF);
+
         System.arraycopy(data, 0, output, 0, origLength);
-        System.arraycopy(thePad, 0, output, origLength, thePad.length);
 
         return output;
     }

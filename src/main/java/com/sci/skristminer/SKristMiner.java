@@ -6,6 +6,7 @@ import com.sci.skristminer.util.Utils;
 import org.apache.commons.cli.*;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

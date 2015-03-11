@@ -6,7 +6,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author sci4me
@@ -46,28 +48,11 @@ public final class Utils
         return result;
     }
 
-    public static long pow(final long b, final long e)
-    {
-        long base = b;
-        long exp = e;
-        long result = 1;
-
-        while (exp != 0)
-        {
-            if ((exp & 1) == 1)
-                result *= base;
-            exp >>= 1;
-            base *= base;
-        }
-
-        return result;
-    }
-
     public static long hashToLong(final byte[] hash)
     {
         long ret = 0;
         for (int i = 5; i >= 0; i--)
-            ret += (hash[i] & 0xFF) * Utils.pow(256, 5 - i);
+            ret += (hash[i] & 0xFF) * Math.pow(256, 5 - i);
         return ret;
     }
 
