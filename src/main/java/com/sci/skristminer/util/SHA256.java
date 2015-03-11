@@ -162,6 +162,7 @@ public final class SHA256
         output[lm1 - 5] = (byte) ((lengthInBits >>> 40) & 0xFF);
         output[lm1 - 6] = (byte) ((lengthInBits >>> 48) & 0xFF);
         output[lm1 - 7] = (byte) ((lengthInBits >>> 56) & 0xFF);
+        output[origLength] = (byte) 0x80;
 
         System.arraycopy(data, 0, output, 0, origLength);
 
