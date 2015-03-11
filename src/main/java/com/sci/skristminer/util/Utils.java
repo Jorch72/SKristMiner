@@ -62,10 +62,25 @@ public final class Utils
         return bytes;
     }
 
-    public static String getWork()
+    public static long getWork()
     {
-        final List<String> lastBlockPageData = get(GET_WORK_LINK);
-        return lastBlockPageData == null ? null : lastBlockPageData.get(0);
+        long work = -1;
+        while (work == -1)
+            work = doGetWork();
+        return work;
+    }
+
+    private static long doGetWork()
+    {
+        try
+        {
+            final List<String> lastBlockPageData = get(GET_WORK_LINK);
+            return Long.parseLong(lastBlockPageData.get(0));
+        }
+        catch (final NumberFormatException e)
+        {
+            return -1;
+        }
     }
 
     public static String getLastBlock()

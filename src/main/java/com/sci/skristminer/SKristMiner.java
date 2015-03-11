@@ -60,7 +60,7 @@ public final class SKristMiner implements MinerListener, Runnable
 
     private long secondsElapsed;
     private String block;
-    private String work;
+    private long work;
     private int finishedMiners;
     private int blocksMined;
     private volatile boolean isMining;
@@ -122,7 +122,7 @@ public final class SKristMiner implements MinerListener, Runnable
 
                     if (this.miners.size() == this.threads)
                     {
-                        if (!this.block.equals(Utils.getLastBlock()) || !this.work.equals(Utils.getWork()))
+                        if (!this.block.equals(Utils.getLastBlock()) || this.work != Utils.getWork())
                         {
                             this.updateBalance();
                             this.stopMining();
