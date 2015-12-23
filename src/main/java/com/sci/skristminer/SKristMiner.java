@@ -34,7 +34,7 @@ public final class SKristMiner implements MinerListener, Runnable
 
         if (fArgs.length < 1)
         {
-            System.out.println("Usage: skristminer <address> [--threads=n, --nonce-offset=n]");
+            System.out.println("Usage: skristminer <address> [--threads=n, --nonces=n]");
             return;
         }
 
@@ -194,7 +194,7 @@ public final class SKristMiner implements MinerListener, Runnable
 
             for (int miner = 0; miner < this.threads; miner++)
             {
-                final Miner miner_ = new Miner(this, miner, this.block, this.work, this.address, startingNonce + this.nonces * miner);
+                final Miner miner_ = new Miner(this, miner, this.block, this.work, this.address, startingNonce + this.nonces * miner, address);
                 this.miners.add(miner_);
                 final Thread minerThread = new Thread(miner_);
                 minerThread.setPriority(Thread.MAX_PRIORITY);

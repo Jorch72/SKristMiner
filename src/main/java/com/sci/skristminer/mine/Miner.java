@@ -19,14 +19,15 @@ public final class Miner extends Thread
     private final String minerID;
     private final long startNonce;
     private final int nonces;
-
+    private final String addr;
+    
     private volatile long nonce;
     private volatile boolean isComplete;
     private volatile boolean solvedBlock;
 
     private volatile boolean stop;
 
-    public Miner(final MinerListener listener, final int id, final String block, final long work, final String minerID, final long startNonce)
+    public Miner(final MinerListener listener, final int id, final String block, final long work, final String minerID, final long startNonce, final String addr)
     {
         this.listener = listener;
         this.id = id;
@@ -38,6 +39,7 @@ public final class Miner extends Thread
         this.nonces = SKristMiner.instance().nonces();
         this.isComplete = false;
         this.solvedBlock = false;
+        this.addr = addr;
     }
 
     @Override
