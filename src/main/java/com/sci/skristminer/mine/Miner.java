@@ -46,14 +46,14 @@ public final class Miner extends Thread
     public void run()
     {
         final String minerBlock = this.minerID + this.block;
-        long lNewBlock = Utils.hashToLong(SHA256.digest(Utils.getBytes(minerBlock + this.nonce)));
+        long lNewBlock = Utils.hashToLong(SHA256.digest(Utils.getBytes(minerBlock + this.nonce + addr)));
 
         for (int hash = 0; hash < this.nonces && lNewBlock >= this.work; hash++, this.nonce++)
         {
             if (this.stop)
                 return;
 
-            lNewBlock = Utils.hashToLong(SHA256.digest(Utils.getBytes(minerBlock + this.nonce)));
+            lNewBlock = Utils.hashToLong(SHA256.digest(Utils.getBytes(minerBlock + this.nonce + addr)));
         }
 
         this.solvedBlock = Utils.submitSolution(this.minerID, this.nonce - 1);
